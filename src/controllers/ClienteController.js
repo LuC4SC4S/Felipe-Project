@@ -11,6 +11,8 @@ module.exports = {
     async cadastro(req, res){
         const id = generateUniqueId();
         const name = req.body.name;
+        const cel = req.body.cel;
+        const stars = req.body.stars;
         const product = req.body.product;
         const observation = req.body.observation;
         const longitude = req.body.longitude;
@@ -20,6 +22,8 @@ module.exports = {
         await connection('clients').insert({
             id,
             name,
+            cel,
+            stars,
             product,
             observation,
             longitude,
@@ -28,7 +32,19 @@ module.exports = {
         });
 
         return res.json({
-            message: `Cliente ${name}: Cadastrado com sucesso`
+            message: `Cliente ${name} com id ${id}: Cadastrado com sucesso`
         });
+    },
+
+    async delete(req, res){
+        const { id } = req.params;
+
+        try {
+            await connection('clients').where('id', id).delete();    
+        } catch (error) {
+            return res.json({ message: `Erro ao excluir!`})    
+        }
+
+        return res.json({ message: `Cliente com id ${id} excluido com sucesso!`})
     }
 }
